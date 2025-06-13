@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Video Playlist for Digital Signage</title>
     <style>
         body, html {
@@ -14,27 +14,29 @@
             background: black;
         }
         video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            //transform: rotate(90deg); /* Portrait mode for Samsung QM43C */
+            width: 100vw;
+            height: 100vh;
+            object-fit: fill; /* Force scaling to 4K */
+            min-width: 100%;
+            min-height: 100%;
+            transform: rotate(90deg); /* Portrait mode for Samsung QM43C */
             transform-origin: center center;
             position: absolute;
             top: 50%;
             left: 50%;
             translate: -50% -50%;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <video id="videoPlayer" autoplay muted></video>
+    <video id="videoPlayer" autoplay muted playsinline></video>
     <script>
         // List of video file names in the GitHub repository's videos folder
         const videoFiles = [
             '01_zen_spa.mp4',
             '02_male_haircut.mp4',
-            '03_maru_1.mp4',
-
+            '03_maru_1.mp4'
             // Add more video file names here
         ];
 
@@ -79,6 +81,12 @@
             if (!document.fullscreenElement) {
                 enterFullscreen();
             }
+        });
+
+        // Ensure video resizes on window resize (handles Tizen quirks)
+        window.addEventListener('resize', () => {
+            videoPlayer.style.width = '100vw';
+            videoPlayer.style.height = '100vh';
         });
     </script>
 </body>
