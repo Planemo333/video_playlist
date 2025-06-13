@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Playlist for Digital Signage</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: black;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: rotate(90deg); /* Portrait mode for Samsung QM43C */
+            transform-origin: center center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            translate: -50% -50%;
+        }
+    </style>
+</head>
+<body>
+    <video id="videoPlayer" autoplay muted></video>
+    <script>
+        // List of video file names in the GitHub repository's videos folder
+        const videoFiles = [
+            '01_zen_spa.mp4',
+            '02_male_haircut.mp4',
+            '03_maru_1.mp4',
+
+            // Add more video file names here
+        ];
+
+        // Base URL for raw video files on GitHub
+        const repoUrl = 'https://raw.githubusercontent.com/Planemo333/video_playlist/main/videos/';
+        const videos = videoFiles.map(file => repoUrl + file);
+        let currentVideoIndex = 0;
+
+        const videoPlayer = document.getElementById('videoPlayer');
+
+        // Function to load and play the current video
+        function playCurrentVideo() {
+            videoPlayer.src = videos[currentVideoIndex];
+            videoPlayer.play().catch(error => {
+                console.error('Error playing video:', error);
+            });
+        }
+
+        // Event listener for when a video ends
+        videoPlayer.addEventListener('ended', () => {
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length; // Loop back to first video
+            playCurrentVideo();
+        });
+
+        // Request fullscreen on load
+        function enterFullscreen() {
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.webkitRequestFullscreen) { // For Tizen browser
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) {
+                videoPlayer.msRequestFullscreen();
+            }
+        }
+
+        // Start playback and fullscreen
+        playCurrentVideo();
+        enterFullscreen();
+
+        // Handle fullscreen change to ensure it stays fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                enterFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
