@@ -16,15 +16,9 @@
         video {
             width: 100vw;
             height: 100vh;
-            object-fit: fill; /* Force scaling to 4K */
             min-width: 100%;
             min-height: 100%;
-            transform: rotate(90deg); /* Portrait mode for Samsung QM43C */
-            transform-origin: center center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            translate: -50% -50%;
+            object-fit: contain; /* Preserve aspect ratio to avoid distortion */
             display: block;
         }
     </style>
